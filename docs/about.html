@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -16,7 +16,7 @@
 <meta property="og:description" content="关于我……
 预留。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://ahqiy001.github.io/post/about.html">
+<meta property="og:url" content="https://ahqiy001.github.io/about.html">
 <meta property="og:image" content="https://g.imgtg.com/uploads/6213/65ed4e33ed245.png">
 <title>about</title>
 
@@ -92,8 +92,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 var now=new Date();
 document.getElementById("copyrightYear").innerHTML=now.getFullYear();
 
-if(""!=""){
-    var startSite=new Date("");
+if("01/14/2025"!=""){
+    var startSite=new Date("01/14/2025");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
