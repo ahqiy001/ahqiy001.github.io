@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://g.imgtg.com/uploads/6213/65ed4e33ed245.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 初次上传本地项目到github的示例教程
+
+# 说明
+
+- 本文主要参考【[[CSDN文章](https://blog.csdn.net/nanzhou520/article/details/135796134)](https://blog.csdn.net/nanzhou520/article/details/135796134)】修改而来，主要是方便自己使用。">
+<meta property="og:title" content="初次上传本地项目到github的示例教程">
+<meta property="og:description" content="# 初次上传本地项目到github的示例教程
+
+# 说明
+
+- 本文主要参考【[[CSDN文章](https://blog.csdn.net/nanzhou520/article/details/135796134)](https://blog.csdn.net/nanzhou520/article/details/135796134)】修改而来，主要是方便自己使用。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ahqiy001.github.io/post/chu-ci-shang-chuan-ben-di-xiang-mu-dao-github-de-shi-li-jiao-cheng.html">
+<meta property="og:image" content="https://g.imgtg.com/uploads/6213/65ed4e33ed245.png">
+<title>初次上传本地项目到github的示例教程</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">初次上传本地项目到github的示例教程</h1>
+<div class="title-right">
+    <a href="https://ahqiy001.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/ahqiy001/ahqiy001.github.io/issues/4" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>初次上传本地项目到github的示例教程</h1>
+<h1>说明</h1>
+<ul>
+<li>本文主要参考【[<a href="https://blog.csdn.net/nanzhou520/article/details/135796134" rel="nofollow">CSDN文章</a>](<a href="https://blog.csdn.net/nanzhou520/article/details/135796134)%E3%80%91%E4%BF%AE%E6%94%B9%E8%80%8C%E6%9D%A5%EF%BC%8C%E4%B8%BB%E8%A6%81%E6%98%AF%E6%96%B9%E4%BE%BF%E8%87%AA%E5%B7%B1%E4%BD%BF%E7%94%A8%E3%80%82" rel="nofollow">https://blog.csdn.net/nanzhou520/article/details/135796134)】修改而来，主要是方便自己使用。</a></li>
+<li>适用于上传本地已有的项目到github上</li>
+<li>适用于云端新项目（仓库）</li>
+<li>github的访问可能需要加速，自行下载watt toolkit（原Steam++）搞下。</li>
+</ul>
+<h1>本地创建项目</h1>
+<p>创建一个新项目，得到以下项目文件。</p>
+<ul>
+<li>这里以由hbuiderx构建的uniapp项目为例，带uni-ui组件。</li>
+<li>如已有项目，使用已有项目即可。</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3084cad84af6180bfd29b15211cb093ea398ce8b4c97e29e13480b5d224852ad/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f756e693245446c5857485a6f7739462e706e67"><img src="https://camo.githubusercontent.com/3084cad84af6180bfd29b15211cb093ea398ce8b4c97e29e13480b5d224852ad/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f756e693245446c5857485a6f7739462e706e67" alt="PixPin_2025-01-30_14-00-11.png" data-canonical-src="https://cdn.sa.net/2025/01/30/uni2EDlXWHZow9F.png" style="max-width: 100%;"></a>​</p>
+<h1>检查SSH KEY</h1>
+<p>在自己电脑上的<code class="notranslate">C:\Users\自己的电脑用户名\.ssh</code>目录下，看是否有以下密钥文件。</p>
+<ul>
+<li>如果也没有.ssh文件夹，即说明没有相关密钥。</li>
+<li>电脑用户名以C盘使用的这个为准，后期登录微软账号的也可能是使用原来的本地用户名。</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e2eb3397693edeae4d7bf94884762f3d4fd2df3a7ce1767375db1d440832c7a0/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f71634c7347646c4a374f586a5366592e706e67"><img src="https://camo.githubusercontent.com/e2eb3397693edeae4d7bf94884762f3d4fd2df3a7ce1767375db1d440832c7a0/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f71634c7347646c4a374f586a5366592e706e67" alt="PixPin_2025-01-30_14-24-12.png" data-canonical-src="https://cdn.sa.net/2025/01/30/qcLsGdlJ7OXjSfY.png" style="max-width: 100%;"></a>​</p>
+<p>检查是否有 id_rsa 和 id_rsa.pub 这两个文件，若有则直接进入下一步，否则执行以下命令</p>
+<ul>
+<li>将以下命令中的邮箱换成自己github账号的邮箱（看情况换）。</li>
+</ul>
+<div class="highlight highlight-source-vue"><pre class="notranslate">ssh-keygen -t rsa -C "email@example.com"</pre></div>
+<p>如下图所示，这里以演示邮箱为例。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c558363908bb91c0d30aea8aaaa748a563418ce556b93f02ce5fa9d12b5a6464/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f7234364c6c3857594a6e4d496f4e392e706e67"><img src="https://camo.githubusercontent.com/c558363908bb91c0d30aea8aaaa748a563418ce556b93f02ce5fa9d12b5a6464/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f7234364c6c3857594a6e4d496f4e392e706e67" alt="PixPin_2025-01-30_14-37-41.png" data-canonical-src="https://cdn.sa.net/2025/01/30/r46Ll8WYJnMIoN9.png" style="max-width: 100%;"></a>​</p>
+<p>然后回到github网站，进入设置，左侧选择【SSH and GPG keys】，然后点击【New SSH key】创建一个新的SSH连接，【Title】标题随便取个英文的。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/48530a8f5b63398cb8c6b93874bee418b80ba950bf6728dbd670981489cad3f4/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f34434956384f6b416863537a3176462e706e67"><img src="https://camo.githubusercontent.com/48530a8f5b63398cb8c6b93874bee418b80ba950bf6728dbd670981489cad3f4/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f34434956384f6b416863537a3176462e706e67" alt="PixPin_2025-01-30_14-42-44.png" data-canonical-src="https://cdn.sa.net/2025/01/30/4CIV8OkAhcSz1vF.png" style="max-width: 100%;"></a>​</p>
+<h1>github上创建新项目（仓库）</h1>
+<p>在github上创建一个新的仓库，这里以一个私有仓库（项目）为例。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a09abf30e600a25174ab0234d44797a2dac917868b6bc988968e7417c7fc39be/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f42467a744e6d6738314132664c34692e706e67"><img src="https://camo.githubusercontent.com/a09abf30e600a25174ab0234d44797a2dac917868b6bc988968e7417c7fc39be/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f42467a744e6d6738314132664c34692e706e67" alt="PixPin_2025-01-30_14-03-21.png" data-canonical-src="https://cdn.sa.net/2025/01/30/BFztNmg81A2fL4i.png" style="max-width: 100%;"></a>​</p>
+<p>然后会显示以下页面，包含一些初始化使用的命令。</p>
+<p>项目没上传前，建议截图保存一下或者将命令复制到文本编辑器中备用。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ca95624ffccf2c388867436cea97bad5375f8da0ba62da4c4f74081d2d76cc18/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f6c767832667074654d6745435071732e706e67"><img src="https://camo.githubusercontent.com/ca95624ffccf2c388867436cea97bad5375f8da0ba62da4c4f74081d2d76cc18/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f6c767832667074654d6745435071732e706e67" alt="PixPin_2025-01-30_14-04-53.png" data-canonical-src="https://cdn.sa.net/2025/01/30/lvx2fpteMgECPqs.png" style="max-width: 100%;"></a>​</p>
+<h1><a href="https://gitforwindows.org/" rel="nofollow">git工具</a></h1>
+<p>下载安装一个【<a href="https://gitforwindows.org/" rel="nofollow">git工具</a>】，已有的直接使用即可。</p>
+<p>然后在项目目录内，空白处右键，选择【open git bash here】,打开git命令终端。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/813245f518c29912258f23749fcd3aafde3f884ad31a3baf7b264ce9ea362572/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f394c38635234774b54714f364a4d6a2e706e67"><img src="https://camo.githubusercontent.com/813245f518c29912258f23749fcd3aafde3f884ad31a3baf7b264ce9ea362572/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f394c38635234774b54714f364a4d6a2e706e67" alt="PixPin_2025-01-30_14-10-35.png" data-canonical-src="https://cdn.sa.net/2025/01/30/9L8cR4wKTqO6JMj.png" style="max-width: 100%;"></a>​</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/04ae3c3017b8c74966b6a39d5846dde3b216e9ec63fcda57527c46346215c314/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f707a745634357655506e6a526d51662e706e67"><img src="https://camo.githubusercontent.com/04ae3c3017b8c74966b6a39d5846dde3b216e9ec63fcda57527c46346215c314/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f707a745634357655506e6a526d51662e706e67" alt="PixPin_2025-01-30_14-12-14.png" data-canonical-src="https://cdn.sa.net/2025/01/30/pztV45vUPnjRmQf.png" style="max-width: 100%;"></a>​</p>
+<p>使用</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">git init</pre></div>
+<p>命令，将项目目录变成 Git 可管理的仓库。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2813083466f45476be2f85799c69f880f77912322d16eda30e8523a274e44f7e/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f586a45435167596b764f34627537482e706e67"><img src="https://camo.githubusercontent.com/2813083466f45476be2f85799c69f880f77912322d16eda30e8523a274e44f7e/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f586a45435167596b764f34627537482e706e67" alt="PixPin_2025-01-30_14-16-42.png" data-canonical-src="https://cdn.sa.net/2025/01/30/XjECQgYkvO4bu7H.png" style="max-width: 100%;"></a>​</p>
+<h1>上传本地项目文件到云端</h1>
+<ul>
+<li>
+<p>备用命令：移除项目关联。（仓库关联错误时使用）</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">git remote rm origin</pre></div>
+</li>
+</ul>
+<p>第一次上传可能需要进行登录，在弹出的窗口里，选择浏览器登录。登录后，重新执行命令即可。（这里忘记截图了）</p>
+<h2>上传测试md文件</h2>
+<ul>
+<li><strong>现在，开始执行git页面中的命令。</strong></li>
+<li>（ls）确保终端里的路径为项目路径。</li>
+<li>下面是使用README.md测试，即页面上显示的命令。</li>
+<li>git init已经执行过了，执行后面的即可，建议一条一条的来。</li>
+<li>这里的main是git项目的主分支。现在新创建的仓库好像都是main。有些可能是master。</li>
+</ul>
+<div class="highlight highlight-source-vue"><pre class="notranslate">// git init（项目上传的第一次需要，后续上传不用）
+echo "# git-test001x" &gt;&gt; README.md
+//生成一个md测试文件
+git add README.md
+//选择上传文件（提交文件到暂存区，还没上传）
+git commit -m "first commit"
+//提交的信息（备注）
+git branch -M main
+git remote add origin https://github.com/ahqiy001/git-test001x.git
+//关联仓库
+git push -u origin main
+//推送至仓库（实际上传）</pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/cb0bbfacb91a47df152ee9b8306c85d69a2393e614b5521d21e831eb44409a1d/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f7a636d4446644f57683259514b6b4c2e706e67"><img src="https://camo.githubusercontent.com/cb0bbfacb91a47df152ee9b8306c85d69a2393e614b5521d21e831eb44409a1d/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f7a636d4446644f57683259514b6b4c2e706e67" alt="PixPin_2025-01-30_15-17-26.png" data-canonical-src="https://cdn.sa.net/2025/01/30/zcmDFdOWh2YQKkL.png" style="max-width: 100%;"></a>​</p>
+<h2>上传完整项目文件到云端</h2>
+<p>回到git终端，使用以下命令进行推送：选择目录—提交的信息提示—推送。</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">git add . 
+#添加当前目录下的所有文件到暂存区：
+git commit -m "message" 
+#提交暂存区文件到仓库，-m表示可以直接输入后面的message，内容随便输。
+//git branch -M main （项目上传的第一次需要，后续上传不用）
+//git remote add origin https://github.com/ahqiy001/git-test001x.git（项目上传的第一次需要，后续上传不用）
+git push origin main 
+或
+git push -u origin main</pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2bc3506acb70238e368d67fc36a0337e4a9d2de7c7b46adcc099e5b6181ed0b7/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f49484143446f716e4b57663145626b2e706e67"><img src="https://camo.githubusercontent.com/2bc3506acb70238e368d67fc36a0337e4a9d2de7c7b46adcc099e5b6181ed0b7/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f49484143446f716e4b57663145626b2e706e67" alt="PixPin_2025-01-30_15-25-33.png" data-canonical-src="https://cdn.sa.net/2025/01/30/IHACDoqnKWf1Ebk.png" style="max-width: 100%;"></a>​</p>
+<p>命令行上传完成后，刷新github页面后，即可看到上传的项目文件。</p>
+<p>也可以将代码下载下来，查看是否与原来的一致。</p>
+<h1>遇到的问题</h1>
+<p>记录一下本次中遇到的问题和解决方法，这里是使用网上的方法解决的。</p>
+<h2>问题一：git Failed to connect to 127.0.0.1 port xxxx: Connection refused</h2>
+<p>方法来源：[<a href="https://blog.csdn.net/XH_jing/article/details/115095225" rel="nofollow">CSDN</a>](<a href="https://blog.csdn.net/XH_jing/article/details/115095225" rel="nofollow">https://blog.csdn.net/XH_jing/article/details/115095225</a>)</p>
+<h3>问题描述</h3>
+<p>在使用 git 拉取、提交代码的时候，会出现 <code class="notranslate">git Failed to connect to 127.0.0.1 port xxxx: Connection refused</code> 的问题。</p>
+<p>原因：无法连接到 127.0.0.1: xxx 端口: 连接被拒绝。</p>
+<h3>解决方案</h3>
+<p>通过各种排查实验，总结出以下几种解决方案：</p>
+<p>（补充：包括显示本地127.0.0.1: xxx，也给它取消下，正常情况是什么都不显示）</p>
+<h5>方案一</h5>
+<p>思路：查询当前是否有代理，如果有就取消。</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">// 首先，查一下当前全局的 http 代理：
+git config --global http.proxy
+// 如果有代理，就取消
+git config --global --unset http.proxy
+
+
+// 再查 https 的代理：
+git config --global https.proxy
+// 同样的，有就取消
+git config --global --unset https.proxy</pre></div>
+<h5>方案二</h5>
+<p>上面的方案如果不行的话，再参考这个方案</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">// 首先，查一下代理：
+env|grep -i proxy
+// 有就取消
+unset http_proxy
+unset https_proxy
+
+// 再查
+env|grep -i proxy
+// 正常情况下是没有代理了
+// 再次查询一下，如果还有的再取消</pre></div>
+<h5>方案三</h5>
+<p>修改环境变量</p>
+<p>在系统变量中找到了变量 <code class="notranslate">http_proxy</code> 和 <code class="notranslate">https_proxy</code>，用户变量也可以看看有没有，删除他就可以了。</p>
+<p>重启计算机。</p>
+<p>再用 git，正常了，再查 <code class="notranslate">env|grep -i proxy</code> ，代理没有了。</p>
+<p>代理没有了，就可以正常拉取、提交代码了。</p>
+<h2>问题二：error: src refspec master does not match any. error: failed to push some refs to</h2>
+<p>解决方法来源：[<a href="https://blog.csdn.net/wenb1bai/article/details/89363711" rel="nofollow">CSDN</a>](<a href="https://blog.csdn.net/wenb1bai/article/details/89363711" rel="nofollow">https://blog.csdn.net/wenb1bai/article/details/89363711</a>)</p>
+<p><strong>解决git push 错误error: src refspec master does not match any. error: failed to push some refs to</strong></p>
+<p>在和远程仓库关联后，通过 push 命令将本地仓库的文件推送到线上仓库时，</p>
+<p>出现了如下错误</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/af5f38c1e8c7c07bdebf734fed61ff6154acabbf2c7a331a82be9649de22eb06/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f656d38694c585233353132775149502e706e67"><img src="https://camo.githubusercontent.com/af5f38c1e8c7c07bdebf734fed61ff6154acabbf2c7a331a82be9649de22eb06/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f656d38694c585233353132775149502e706e67" alt="https://i-blog.csdnimg.cn/blog_migrate/0765fbb4a6d93091fa7e3dd126041bba.png" data-canonical-src="https://cdn.sa.net/2025/01/30/em8iLXR3512wQIP.png" style="max-width: 100%;"></a>​</p>
+<p><code class="notranslate">error: src refspec master does not match any.</code></p>
+<p><code class="notranslate">error: failed to push some refs to</code></p>
+<p>常见原因：</p>
+<ol>
+<li>本地 git 仓库目录下为空</li>
+<li>本地仓库 add 后未 [<a href="https://so.csdn.net/so/search?q=commit&amp;spm=1001.2101.3001.7020" rel="nofollow">commit</a>](<a href="https://so.csdn.net/so/search?q=commit&amp;spm=1001.2101.3001.7020" rel="nofollow">https://so.csdn.net/so/search?q=commit&amp;spm=1001.2101.3001.7020</a>)</li>
+</ol>
+<p>3.git init 错误</p>
+<p>用命令 git add + 文件名，把文件添加到仓库就行 ，然后正常 push 就好。</p>
+<h2>问题三：git push -u origin main Everything up-to-date branch 'main' set up to track 'origin/main'.</h2>
+<p>解决方法来源：[<a href="https://cloud.tencent.com/developer/article/1896229" rel="nofollow">腾讯云社区</a>](<a href="https://cloud.tencent.com/developer/article/1896229" rel="nofollow">https://cloud.tencent.com/developer/article/1896229</a>)</p>
+<p><strong>git push 提交出现 Everything up-to-date 提示问题 - 腾讯云开发者社区 - 腾讯云以前通过 git 提交代码到 GitHub 上的个人 main 分支时，曾出现过这样一个很低级的错误——</strong></p>
+<p>以前通过 git 提交代码到 GitHub 上的个人 main 分支时，曾出现过这样一个很低级的错误——</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/70774dd2e9742942af5e0eaacb900e4194a5b0ce76a8aeb68cf95245d26d5131/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f51734b4e4a784f7a4c746e6c6f35462e706e67"><img src="https://camo.githubusercontent.com/70774dd2e9742942af5e0eaacb900e4194a5b0ce76a8aeb68cf95245d26d5131/68747470733a2f2f63646e2e73612e6e65742f323032352f30312f33302f51734b4e4a784f7a4c746e6c6f35462e706e67" alt="https://ask.qcloudimg.com/http-save/yehe-6268234/afed73dcfc18e349d0b153d2646b3e22.png" data-canonical-src="https://cdn.sa.net/2025/01/30/QsKNJxOzLtnlo5F.png" style="max-width: 100%;"></a>​</p>
+<p>出现这个错误原因，其实就是没有正确执行指令造成的，也就是没有正常提交数据。</p>
+<p>一般按照以下命令提交，基本就没什么问题了——</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">git add . #添加当前目录下的所有文件到暂存区：
+git commit -m "message" #提交暂存区文件到仓库，-m表示可以直接输入后面的message
+git push origin main </pre></div>
+<p><strong>git push</strong> 命用于从将本地的分支版本上传到远程并合并。</p>
+<p>命令格式如下：</p>
+<div class="highlight highlight-source-vue"><pre class="notranslate">git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</pre></div>
+<p>如果本地分支名与远程分支名相同，则可以省略冒号：</p>
+<h1>结束</h1></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://ahqiy001.github.io">纸小念github博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("01/14/2025"!=""){
+    var startSite=new Date("01/14/2025");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","ahqiy001/ahqiy001.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
