@@ -2,7 +2,7 @@
 
 # 说明
 
-- 本文主要参考【[[CSDN文章](https://blog.csdn.net/nanzhou520/article/details/135796134)](https://blog.csdn.net/nanzhou520/article/details/135796134)】修改而来，主要是方便自己使用。
+- 本文主要参考【[CSDN文章](https://blog.csdn.net/nanzhou520/article/details/135796134)】修改而来，主要是方便自己使用。
 - 适用于上传本地已有的项目到github上
 - 适用于云端新项目（仓库）
 - github的访问可能需要加速，自行下载watt toolkit（原Steam++）搞下。
@@ -136,7 +136,7 @@ git push -u origin main
 
 ## 问题一：git Failed to connect to 127.0.0.1 port xxxx: Connection refused
 
-方法来源：[[CSDN](https://blog.csdn.net/XH_jing/article/details/115095225)](https://blog.csdn.net/XH_jing/article/details/115095225)
+方法来源：【[CSDN](https://blog.csdn.net/XH_jing/article/details/115095225)】
 
 ### 问题描述
 
@@ -198,7 +198,7 @@ env|grep -i proxy
 
 ## 问题二：error: src refspec master does not match any. error: failed to push some refs to
 
-解决方法来源：[[CSDN](https://blog.csdn.net/wenb1bai/article/details/89363711)](https://blog.csdn.net/wenb1bai/article/details/89363711)
+解决方法来源：【[CSDN](https://blog.csdn.net/wenb1bai/article/details/89363711)】
 
 **解决git push 错误error: src refspec master does not match any. error: failed to push some refs to**
 
@@ -223,7 +223,7 @@ env|grep -i proxy
 
 ## 问题三：git push -u origin main Everything up-to-date branch 'main' set up to track 'origin/main'.
 
-解决方法来源：[[腾讯云社区](https://cloud.tencent.com/developer/article/1896229)](https://cloud.tencent.com/developer/article/1896229)
+解决方法来源：【[腾讯云社区](https://cloud.tencent.com/developer/article/1896229)】
 
 **git push 提交出现 Everything up-to-date 提示问题 - 腾讯云开发者社区 - 腾讯云以前通过 git 提交代码到 GitHub 上的个人 main 分支时，曾出现过这样一个很低级的错误——**
 
