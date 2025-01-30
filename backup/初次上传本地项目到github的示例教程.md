@@ -215,8 +215,7 @@ env|grep -i proxy
 常见原因：
 
 1. 本地 git 仓库目录下为空
-2. 本地仓库 add 后未 [[commit](https://so.csdn.net/so/search?q=commit&spm=1001.2101.3001.7020)](https://so.csdn.net/so/search?q=commit&spm=1001.2101.3001.7020)
-
+2. 本地仓库 add 后未commit
 3.git init 错误
 
 用命令 git add + 文件名，把文件添加到仓库就行 ，然后正常 push 就好。
