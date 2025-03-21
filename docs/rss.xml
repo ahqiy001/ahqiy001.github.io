@@ -1,5 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>纸小念github博客</title><link>https://ahqiy001.github.io</link><description>有点小懒，随缘更新</description><copyright>纸小念github博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://g.imgtg.com/uploads/6213/65ed4e33ed245.png</url><title>avatar</title><link>https://ahqiy001.github.io</link></image><lastBuildDate>Thu, 30 Jan 2025 13:59:13 +0000</lastBuildDate><managingEditor>纸小念github博客</managingEditor><ttl>60</ttl><webMaster>纸小念github博客</webMaster><item><title>初次上传本地项目到github的示例教程</title><link>https://ahqiy001.github.io/post/chu-ci-shang-chuan-ben-di-xiang-mu-dao-github-de-shi-li-jiao-cheng.html</link><description># 初次上传本地项目到github的示例教程
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>纸小念github博客</title><link>https://ahqiy001.github.io</link><description>有点小懒，随缘更新</description><copyright>纸小念github博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://g.imgtg.com/uploads/6213/65ed4e33ed245.png</url><title>avatar</title><link>https://ahqiy001.github.io</link></image><lastBuildDate>Fri, 21 Mar 2025 13:38:04 +0000</lastBuildDate><managingEditor>纸小念github博客</managingEditor><ttl>60</ttl><webMaster>纸小念github博客</webMaster><item><title>FastApi(python)后端项目部署记录</title><link>https://ahqiy001.github.io/post/FastApi%28python%29-hou-duan-xiang-mu-bu-shu-ji-lu.html</link><description># FastApi(python)后端项目部署记录
+
+# 说明
+* 时间：20250321-2137
+
+* 后端部署方式：打包成docker镜像
+
+* 本地打包，云端部署。</description><guid isPermaLink="true">https://ahqiy001.github.io/post/FastApi%28python%29-hou-duan-xiang-mu-bu-shu-ji-lu.html</guid><pubDate>Fri, 21 Mar 2025 13:37:36 +0000</pubDate></item><item><title>初次上传本地项目到github的示例教程</title><link>https://ahqiy001.github.io/post/chu-ci-shang-chuan-ben-di-xiang-mu-dao-github-de-shi-li-jiao-cheng.html</link><description># 初次上传本地项目到github的示例教程
 
 # 说明
 

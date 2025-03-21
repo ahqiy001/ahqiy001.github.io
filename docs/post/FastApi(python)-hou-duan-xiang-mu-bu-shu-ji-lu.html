@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://g.imgtg.com/uploads/6213/65ed4e33ed245.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# FastApi(python)后端项目部署记录
+
+# 说明
+* 时间：20250321-2137
+
+* 后端部署方式：打包成docker镜像
+
+* 本地打包，云端部署。">
+<meta property="og:title" content="FastApi(python)后端项目部署记录">
+<meta property="og:description" content="# FastApi(python)后端项目部署记录
+
+# 说明
+* 时间：20250321-2137
+
+* 后端部署方式：打包成docker镜像
+
+* 本地打包，云端部署。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ahqiy001.github.io/post/FastApi%28python%29-hou-duan-xiang-mu-bu-shu-ji-lu.html">
+<meta property="og:image" content="https://g.imgtg.com/uploads/6213/65ed4e33ed245.png">
+<title>FastApi(python)后端项目部署记录</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">FastApi(python)后端项目部署记录</h1>
+<div class="title-right">
+    <a href="https://ahqiy001.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/ahqiy001/ahqiy001.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>FastApi(python)后端项目部署记录</h1>
+<h1>说明</h1>
+<ul>
+<li>
+<p>时间：20250321-2137</p>
+</li>
+<li>
+<p>后端部署方式：打包成docker镜像</p>
+</li>
+<li>
+<p>本地打包，云端部署。</p>
+</li>
+<li>
+<p>云端如有相似环境，可直接在云端进行打包创建docker容器。</p>
+<p>‍</p>
+</li>
+<li>
+<p>含数据库配置。（这里使用本地已有数据进行）</p>
+</li>
+<li>
+<p>一些基础配置和命令，这里不细讲，自己遇到则网上搜搜。</p>
+</li>
+<li>
+<p>比如Linux命令、vim命令等。</p>
+<p>‍</p>
+</li>
+<li>
+<p>云服务器面板使用1panel面板进行管理。</p>
+</li>
+<li>
+<p>如果使用的是宝塔面板，本笔记就只能作为参考了。</p>
+</li>
+<li>
+<p>两个的主要部署环境不太同，宝塔主要使用Linux服务器真实环境，1panel主要使用docker容器环境。</p>
+</li>
+<li>
+<p>也可以跳转笔记【[<a href="https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q" rel="nofollow">息流笔记</a>](<a href="https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q)%E3%80%91%E8%BF%9B%E8%A1%8C%E6%9F%A5%E7%9C%8B%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E9%83%A8%E7%BD%B2%E8%BF%87%E7%A8%8B%EF%BC%882024-1215%E5%88%9B%E5%BB%BA%EF%BC%89%E3%80%82" rel="nofollow">https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q)】进行查看宝塔面板部署过程（2024-1215创建）。</a></p>
+</li>
+<li>
+<p>如果需要进行项目隔离，使用1panel好点。</p>
+</li>
+</ul>
+<p>‍</p>
+<h1>打包为docker镜像</h1>
+<p>‍</p>
+<h2>导出项目依赖</h2>
+<p>如果每个项目有对应的虚拟虚拟环境，那么使用pycharm的终端里，在当前项目下，直接实现使用命令：pip freeze &gt; requirements.txt #pip命令生成依赖性清单</p>
+<div class="highlight highlight-text-html-basic"><pre class="notranslate">pip freeze <span class="pl-kos">&gt;</span> requirements.txt</pre></div>
+<p>后续安装该项目的依赖时，即可直接使用（<strong>预留，这里不用</strong>）：</p>
+<div class="highlight highlight-text-html-basic"><pre class="notranslate">pip install -r requirements.txt</pre></div>
+<p>‍</p>
+<p>‍</p>
+<h2>创建Dockerfile</h2>
+<p>接下来，需要创建一个Dockerfile文件（<strong>没有后缀名</strong>），用于定义Docker镜像的构建过程。在项目的根目录下创建一个名为Dockerfile的文件，并添加以下内容：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 使用官方 Python 3.12.8 镜像作为基础镜像</span>
+<span class="pl-c"># 根据自己构建项目时选的版本来</span>
+<span class="pl-c1">FROM</span> <span class="pl-s1">python</span>:<span class="pl-c1">3.12</span><span class="pl-c1">-</span><span class="pl-s1">slim</span>
+
+<span class="pl-c"># 设置版本信息</span>
+<span class="pl-c1">LABEL</span> <span class="pl-s1">version</span><span class="pl-c1">=</span><span class="pl-s">"1.0.0"</span>
+
+<span class="pl-c"># 设置工作目录</span>
+<span class="pl-c1">WORKDIR</span> <span class="pl-c1">/</span><span class="pl-s1">app</span>
+
+<span class="pl-c"># 安装系统依赖</span>
+<span class="pl-c1">RUN</span> <span class="pl-s1">apt</span><span class="pl-c1">-</span><span class="pl-s1">get</span> <span class="pl-s1">update</span> <span class="pl-c1">&amp;</span><span class="pl-c1">&amp;</span> <span class="pl-s1">apt</span><span class="pl-c1">-</span><span class="pl-s1">get</span> <span class="pl-s1">install</span> <span class="pl-c1">-</span><span class="pl-s1">y</span> \
+    <span class="pl-s1">build</span><span class="pl-c1">-</span><span class="pl-s1">essential</span> \
+    <span class="pl-s1">libssl</span><span class="pl-c1">-</span><span class="pl-s1">dev</span> \
+    <span class="pl-s1">libffi</span><span class="pl-c1">-</span><span class="pl-s1">dev</span> \
+    <span class="pl-s1">python3</span><span class="pl-c1">-</span><span class="pl-s1">dev</span> \
+    <span class="pl-s1">cargo</span> \
+    <span class="pl-c1">&amp;</span><span class="pl-c1">&amp;</span> <span class="pl-s1">rm</span> <span class="pl-c1">-</span><span class="pl-s1">rf</span> <span class="pl-c1">/</span><span class="pl-s1">var</span><span class="pl-c1">/</span><span class="pl-s1">lib</span><span class="pl-c1">/</span><span class="pl-s1">apt</span><span class="pl-c1">/</span><span class="pl-s1">lists</span><span class="pl-c1">/</span><span class="pl-c1">*</span>
+
+<span class="pl-c"># 更新 pip</span>
+<span class="pl-c1">RUN</span> <span class="pl-s1">pip</span> <span class="pl-s1">install</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">upgrade</span> <span class="pl-s1">pip</span>
+
+<span class="pl-c"># 复制依赖文件并安装依赖</span>
+<span class="pl-c1">COPY</span> <span class="pl-s1">requirements</span>.<span class="pl-c1">txt</span> <span class="pl-c1">/</span><span class="pl-s1">app</span><span class="pl-c1">/</span>
+<span class="pl-c1">RUN</span> <span class="pl-s1">pip</span> <span class="pl-s1">install</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">no</span><span class="pl-c1">-</span><span class="pl-s1">cache</span><span class="pl-c1">-</span><span class="pl-s1">dir</span> <span class="pl-c1">-</span><span class="pl-s1">r</span> <span class="pl-s1">requirements</span>.<span class="pl-c1">txt</span>
+
+<span class="pl-c"># 复制项目文件到容器中</span>
+<span class="pl-c1">COPY</span> . <span class="pl-c1">/</span><span class="pl-c1">app</span>
+
+<span class="pl-c"># 暴露应用端口（FastAPI 默认使用 8000 端口）</span>
+<span class="pl-c1">EXPOSE</span> <span class="pl-c1">8085</span>
+<span class="pl-c"># 与云端需要设置的端口相同</span>
+
+<span class="pl-c"># 启动应用</span>
+<span class="pl-c1">CMD</span> [<span class="pl-s">"uvicorn"</span>, <span class="pl-s">"app:apps"</span>, <span class="pl-s">"--host"</span>, <span class="pl-s">"0.0.0.0"</span>, <span class="pl-s">"--port"</span>, <span class="pl-s">"8086"</span>]</pre></div>
+<h2>清理不必要的文件</h2>
+<p>删除原始项目的虚拟环境和运行中产生的文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/073dc2e43ef69c9beba5a7a3facb85c3ea0834e770de786d9061e8e6739a0cd9/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6b6542464f6c4b576131734d6243582e706e67"><img src="https://camo.githubusercontent.com/073dc2e43ef69c9beba5a7a3facb85c3ea0834e770de786d9061e8e6739a0cd9/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6b6542464f6c4b576131734d6243582e706e67" alt="PixPin_2025-03-20_21-48-59" data-canonical-src="https://cdn.sa.net/2025/03/21/keBFOlKWa1sMbCX.png" style="max-width: 100%;"></a>​</p>
+<p>只保留使用到的代码，其他全部删除</p>
+<p>主要后面是要复制到Linux环境里进行打包，所以删除一些不必要的文件，能加快打包速度。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/59478d2c0ab00238fcf28d819efefdd3a4ce8fffe4c8c0e8916372dc14efd3af/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f74455342466d6838446971416e335a2e706e67"><img src="https://camo.githubusercontent.com/59478d2c0ab00238fcf28d819efefdd3a4ce8fffe4c8c0e8916372dc14efd3af/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f74455342466d6838446971416e335a2e706e67" alt="PixPin_2025-03-20_21-50-03" data-canonical-src="https://cdn.sa.net/2025/03/21/tESBFmh8DiqAn3Z.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<h2>打开Linux系统</h2>
+<p>这里使用虚拟机系统来进行本地打包操作。</p>
+<p>版本：Ubuntu2404</p>
+<p>系统需要自行准备好，这里仅测试打包流程。</p>
+<p>也可以使用其他Linux系统，或者直接将代码上传云端，在云端打包。</p>
+<p>以下为Ubuntu图形化界面本地打包流程。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c472efff0c8524cec685db1c45d3bb5be25c4f84d025831c6e14225c39530bc8/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4b704337424a4d73775162414531472e706e67"><img src="https://camo.githubusercontent.com/c472efff0c8524cec685db1c45d3bb5be25c4f84d025831c6e14225c39530bc8/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4b704337424a4d73775162414531472e706e67" alt="PixPin_2025-03-20_21-58-46" data-canonical-src="https://cdn.sa.net/2025/03/21/KpC7BJMswQbAE1G.png" style="max-width: 100%;"></a>​</p>
+<p>输入用户密码进入系统，然后需要使用终端进行操作。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/19c966a2bf5ceb199ed3dca19d4f68450bcdf2d8d21824c21d03509ff621c701/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f34457068555a3946483575506f67532e706e67"><img src="https://camo.githubusercontent.com/19c966a2bf5ceb199ed3dca19d4f68450bcdf2d8d21824c21d03509ff621c701/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f34457068555a3946483575506f67532e706e67" alt="PixPin_2025-03-20_22-00-22" data-canonical-src="https://cdn.sa.net/2025/03/21/4EphUZ9FH5uPogS.png" style="max-width: 100%;"></a>​</p>
+<h2>安装docker</h2>
+<p>这里的Linux系统还没有安装docker，所以需要进行安装</p>
+<blockquote>
+<p><span>如果已经安装的，就跳过这一步。</span></p>
+</blockquote>
+<p>使用以下命令进行安装</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">apt</span><span class="pl-c1">-</span><span class="pl-s1">get</span> <span class="pl-s1">update</span>
+<span class="pl-s1">sudo</span> <span class="pl-s1">apt</span><span class="pl-c1">-</span><span class="pl-s1">get</span> <span class="pl-s1">install</span> <span class="pl-c1">-</span><span class="pl-s1">y</span> <span class="pl-s1">docker</span>.<span class="pl-c1">io</span></pre></div>
+<p>输入密码，建议使用左侧键盘上的数字键来输入数字。</p>
+<p>右侧数字小键盘可能没有开启，会提示错误。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6fe9ef0ff96dd827a46cf02b02afda51dd6080366ab36a7cef172a89744783a8/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f644a7262466d736f48787a474931552e706e67"><img src="https://camo.githubusercontent.com/6fe9ef0ff96dd827a46cf02b02afda51dd6080366ab36a7cef172a89744783a8/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f644a7262466d736f48787a474931552e706e67" alt="PixPin_2025-03-20_22-04-51" data-canonical-src="https://cdn.sa.net/2025/03/21/dJrbFmsoHxzGI1U.png" style="max-width: 100%;"></a>​</p>
+<p>如下图，安装完成</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ebfabd9781e07cf7a3faca833646c02336a125b564edf0f01cc77a6dd9276a2c/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f646b614a456a3834797541626553462e706e67"><img src="https://camo.githubusercontent.com/ebfabd9781e07cf7a3faca833646c02336a125b564edf0f01cc77a6dd9276a2c/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f646b614a456a3834797541626553462e706e67" alt="PixPin_2025-03-20_22-07-49" data-canonical-src="https://cdn.sa.net/2025/03/21/dkaJEj84yuAbeSF.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<p>最好用命令也测试一下是否安装成功</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">docker</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">version</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d1c009f8f3cbe08fa861206c8adffaa36f5c776d81294ac34430092f81085123/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f59673339684a4b4d35636c6e386f722e706e67"><img src="https://camo.githubusercontent.com/d1c009f8f3cbe08fa861206c8adffaa36f5c776d81294ac34430092f81085123/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f59673339684a4b4d35636c6e386f722e706e67" alt="PixPin_2025-03-20_22-36-42" data-canonical-src="https://cdn.sa.net/2025/03/21/Yg39hJKM5cln8or.png" style="max-width: 100%;"></a></p>
+<p>如显示docker版本，即为成功。</p>
+<p>‍</p>
+<h2>安装python环境</h2>
+<p>这个是必要的，没有的也需要安装下。</p>
+<p>最好和你的项目版本相近</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">apt</span> <span class="pl-s1">install</span> <span class="pl-s1">python3</span><span class="pl-c1">.12</span></pre></div>
+<p>如果提示进程锁，则重启下Linux系统。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/eac50d263fdbc016fe9a09a158a1d41c7891212fddcfccbb65a441cb6a34adc4/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f46345a4e394a56596b4470587855532e706e67"><img src="https://camo.githubusercontent.com/eac50d263fdbc016fe9a09a158a1d41c7891212fddcfccbb65a441cb6a34adc4/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f46345a4e394a56596b4470587855532e706e67" alt="PixPin_2025-03-20_22-44-21" data-canonical-src="https://cdn.sa.net/2025/03/21/F4ZN9JVYkDpXxUS.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<p>进程走完，检查是否安装成功</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">python3</span>.<span class="pl-c1">12</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">version</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4cd353831e2cf422d4f50252dbfe724b96667f45c7167244b33295c2785bf8bd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5a7a665370515955716b78324677672e706e67"><img src="https://camo.githubusercontent.com/4cd353831e2cf422d4f50252dbfe724b96667f45c7167244b33295c2785bf8bd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5a7a665370515955716b78324677672e706e67" alt="PixPin_2025-03-20_22-46-22" data-canonical-src="https://cdn.sa.net/2025/03/21/ZzfSpQYUqkx2Fwg.png" style="max-width: 100%;"></a></p>
+<p>显示python版本号，则说明python安装成功。</p>
+<p>‍</p>
+<h2>安装pip</h2>
+<p>有些没有自带pip，需要手动安装下。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">apt</span> <span class="pl-s1">install</span> <span class="pl-s1">python3</span><span class="pl-c1">-</span><span class="pl-s1">pip</span></pre></div>
+<p>安装完成后，测试一下</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">pip</span> <span class="pl-s1">list</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ebc8d59e57631b98c39438e63624ef14789e10552f7cd8c02e33b5612ad10959/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f32733179517a6f706844495361466b2e706e67"><img src="https://camo.githubusercontent.com/ebc8d59e57631b98c39438e63624ef14789e10552f7cd8c02e33b5612ad10959/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f32733179517a6f706844495361466b2e706e67" alt="PixPin_2025-03-20_22-54-00" data-canonical-src="https://cdn.sa.net/2025/03/21/2s1yQzophDISaFk.png" style="max-width: 100%;"></a>​</p>
+<p>如果显示一些软件包，则说明pip安装成功。</p>
+<p>‍</p>
+<h2>复制文件到Linux系统</h2>
+<p>将项目压缩为tar格式的压缩包，方便复制到Linux系统里。</p>
+<p>文件名字尽量短点，方便查看目录路径</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4fe1e7409ae3a90e8cc416dab9d7dd29e1ffcfa1b855ea21df52fec5ea7b7bae/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f666153564767687a46457874384a6d2e706e67"><img src="https://camo.githubusercontent.com/4fe1e7409ae3a90e8cc416dab9d7dd29e1ffcfa1b855ea21df52fec5ea7b7bae/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f666153564767687a46457874384a6d2e706e67" alt="PixPin_2025-03-20_22-22-07" data-canonical-src="https://cdn.sa.net/2025/03/21/faSVGghzFExt8Jm.png" style="max-width: 100%;"></a>​</p>
+<p>然后把压缩包后缀删了，再复制到Linux系统里，复制成功后在添加后缀。</p>
+<p>（我这里是需要这样才能复制，好像是虚拟机连接有问题。如果正常复制可以成功就不用改。）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a9364b2369e2c29be725fd8197dc4443f1a66b5dfb3d0687e8e3ffd19a638465/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7750654f317235545666433247366a2e706e67"><img src="https://camo.githubusercontent.com/a9364b2369e2c29be725fd8197dc4443f1a66b5dfb3d0687e8e3ffd19a638465/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7750654f317235545666433247366a2e706e67" alt="PixPin_2025-03-20_22-23-34" data-canonical-src="https://cdn.sa.net/2025/03/21/wPeO1r5TVfC2G6j.png" style="max-width: 100%;"></a>​</p>
+<p>gif演示：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6bc5924ea9461c8386b393cc2c2358ead33db7f421fc75f23de06fde16bf508e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5a696d365565773344624a4c7653432e676966"><img src="https://camo.githubusercontent.com/6bc5924ea9461c8386b393cc2c2358ead33db7f421fc75f23de06fde16bf508e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5a696d365565773344624a4c7653432e676966" alt="PixPin_2025-03-20_22-26-12" data-canonical-src="https://cdn.sa.net/2025/03/21/Zim6Uew3DbJLvSC.gif" style="max-width: 100%;"></a>​</p>
+<p>解压项目代码：直接选中文件，然后右键提取。</p>
+<p>如习惯命令，也可在终端使用命令进行解压操作。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/df91800193db517ddeafff6fd7c2a3ee9003ccc0f4d0ee07798aec6813feba87/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f36684e56587238314c46325247694d2e706e67"><img src="https://camo.githubusercontent.com/df91800193db517ddeafff6fd7c2a3ee9003ccc0f4d0ee07798aec6813feba87/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f36684e56587238314c46325247694d2e706e67" alt="PixPin_2025-03-20_22-27-14" data-canonical-src="https://cdn.sa.net/2025/03/21/6hNVXr81LF2RGiM.png" style="max-width: 100%;"></a>​</p>
+<p>然后进入项目目录内，右键打开终端。</p>
+<p>这里名字还是太长了，建议短点。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/78b15aa024c03faa96b2c2636e29b497dfebc67022809768929b166e1c7d17eb/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f42736b516d4e495a6e7463673343682e706e67"><img src="https://camo.githubusercontent.com/78b15aa024c03faa96b2c2636e29b497dfebc67022809768929b166e1c7d17eb/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f42736b516d4e495a6e7463673343682e706e67" alt="PixPin_2025-03-20_22-28-19" data-canonical-src="https://cdn.sa.net/2025/03/21/BskQmNIZntcg3Ch.png" style="max-width: 100%;"></a></p>
+<p>核对项目路径。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">pwd</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/341e8ef36b408f554e353fc967f868cb32fb2e0daa904a6a224abeaf26326a4a/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f426837647a326d746c756e514136432e706e67"><img src="https://camo.githubusercontent.com/341e8ef36b408f554e353fc967f868cb32fb2e0daa904a6a224abeaf26326a4a/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f426837647a326d746c756e514136432e706e67" alt="PixPin_2025-03-20_22-29-19" data-canonical-src="https://cdn.sa.net/2025/03/21/Bh7dz2mtlunQA6C.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<p>‍</p>
+<h2>构建docker镜像</h2>
+<h3>打包（失败）</h3>
+<p>OK，准备好docker环境、项目文件和Dockerfile文件后，可以开始打包了。</p>
+<p>回到项目目录内，然后打开终端使用以下格式的命令进行打包。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">docker</span> <span class="pl-s1">build</span> <span class="pl-c1">-</span><span class="pl-s1">t</span> <span class="pl-s1">项目名称</span>（<span class="pl-s1">英文</span>）:<span class="pl-c1">1.0</span>.<span class="pl-c1">0</span>（<span class="pl-c1">项目版本</span>） <span class="pl-s1">空格</span>.</pre></div>
+<p>‍</p>
+<p>本项目的命令：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">docker</span> <span class="pl-s1">build</span> <span class="pl-c1">-</span><span class="pl-s1">t</span> <span class="pl-s1">fastapi_cw_test</span>:<span class="pl-c1">1.0</span>.<span class="pl-c1">0</span> .</pre></div>
+<p>如果报错，则添加root权限，再进行测试。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8147006317a57fd6edc0e3b60e5f99ad597b0f277a04ca53dc744d9bac23642f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4478486c35383353694368497147312e706e67"><img src="https://camo.githubusercontent.com/8147006317a57fd6edc0e3b60e5f99ad597b0f277a04ca53dc744d9bac23642f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4478486c35383353694368497147312e706e67" alt="PixPin_2025-03-20_22-58-42" data-canonical-src="https://cdn.sa.net/2025/03/21/DxHl583SiChIqG1.png" style="max-width: 100%;"></a>​</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">docker</span> <span class="pl-s1">build</span> <span class="pl-c1">-</span><span class="pl-s1">t</span> <span class="pl-s1">fastapi_cw_test</span>:<span class="pl-c1">1.0</span>.<span class="pl-c1">0</span> .</pre></div>
+<p>‍</p>
+<h4>权限问题：</h4>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/239be1ce93b0ff6eb175ffc4e62cc0dc63cc7ac2b434123315bfa69fcc73d764/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6c446d68466b736771704b525147782e706e67"><img src="https://camo.githubusercontent.com/239be1ce93b0ff6eb175ffc4e62cc0dc63cc7ac2b434123315bfa69fcc73d764/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6c446d68466b736771704b525147782e706e67" alt="PixPin_2025-03-20_22-59-57" data-canonical-src="https://cdn.sa.net/2025/03/21/lDmhFksgqpKRQGx.png" style="max-width: 100%;"></a></p>
+<h4>网络问题：</h4>
+<p>这个是docker官方镜像源经常会出现无法连接的缘故，只能网上查找相关的可用源来替换。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/25215fc34368ee022fed91cc8a1e5ff9d8896ee37e144f5f202cc26873d7f9cb/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f696456735579495835334670757a762e706e67"><img src="https://camo.githubusercontent.com/25215fc34368ee022fed91cc8a1e5ff9d8896ee37e144f5f202cc26873d7f9cb/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f696456735579495835334670757a762e706e67" alt="PixPin_2025-03-20_23-01-08" data-canonical-src="https://cdn.sa.net/2025/03/21/idVsUyIX53Fpuzv.png" style="max-width: 100%;"></a></p>
+<p>‍</p>
+<p>‍</p>
+<h3>替换docker镜像源</h3>
+<p>新开个终端，然后切换到docker目录</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">cd</span>  <span class="pl-c1">/</span><span class="pl-s1">etc</span><span class="pl-c1">/</span><span class="pl-s1">docker</span></pre></div>
+<p>新建daemon.json</p>
+<blockquote>
+<p>记得带sudo（权限）</p>
+</blockquote>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">touch</span> <span class="pl-s1">daemeon</span>.<span class="pl-c1">json</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/20f79168d3e6f90b1adcdab609659f6ba26486a715827a3b4b454d5adc8fb8d3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f733850364f796c6b753768315147652e706e67"><img src="https://camo.githubusercontent.com/20f79168d3e6f90b1adcdab609659f6ba26486a715827a3b4b454d5adc8fb8d3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f733850364f796c6b753768315147652e706e67" alt="PixPin_2025-03-20_23-07-11" data-canonical-src="https://cdn.sa.net/2025/03/21/s8P6Oylku7h1QGe.png" style="max-width: 100%;"></a></p>
+<p>安装vim（自带vi不好用）</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">apt</span> <span class="pl-s1">install</span> <span class="pl-s1">vim</span> </pre></div>
+<p>‍</p>
+<p>编辑（带权限）</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">vim</span> <span class="pl-c1">/</span><span class="pl-s1">etc</span><span class="pl-c1">/</span><span class="pl-s1">docker</span><span class="pl-c1">/</span><span class="pl-s1">daemon</span>.<span class="pl-c1">json</span></pre></div>
+<p>替换为可用镜像源，需要网上寻找新的可用源。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate">{
+  <span class="pl-s">"registry-mirrors"</span>: [
+    <span class="pl-s">"https://docker-0.unsee.tech"</span>,
+    <span class="pl-s">"https://docker-cf.registry.cyou"</span>,
+    <span class="pl-s">"https://docker.1panel.live"</span>
+  ]
+}</pre></div>
+<p>按下图这种添加进去。</p>
+<p>（以下源已失效）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ff4d8247f2866a28742a77dd74c94969d05de975c423eadecf0ae0f27400755f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5972745357495842484b316a6e5a6c2e706e67"><img src="https://camo.githubusercontent.com/ff4d8247f2866a28742a77dd74c94969d05de975c423eadecf0ae0f27400755f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f5972745357495842484b316a6e5a6c2e706e67" alt="PixPin_2025-03-20_23-14-44" data-canonical-src="https://cdn.sa.net/2025/03/21/YrtSWIXBHK1jnZl.png" style="max-width: 100%;"></a></p>
+<p>vim命令补充：</p>
+<p>加！为强制操作，退不出来时使用。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate">：<span class="pl-s1">wq</span>!<span class="pl-s1">强制保存并删除</span>
+：<span class="pl-s1">q</span>!<span class="pl-s1">强制不保存并退出</span></pre></div>
+<p>‍</p>
+<p>重启 Docker 服务：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart docker</pre></div>
+<p>‍</p>
+<h3>检查 Docker 服务状态</h3>
+<p>确保 Docker 服务正常运行，并且没有资源限制方面的问题。可以使用以下命令检查 Docker 服务状态：</p>
+<p>‍</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl status docker</pre></div>
+<p>如果服务没有正常运行，可以使用以下命令启动或重启 Docker 服务：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl start docker
+<span class="pl-c"><span class="pl-c">#</span> 或者</span>
+sudo systemctl restart docker</pre></div>
+<h3>再次尝试</h3>
+<p>然后再次尝试拉取和构建：</p>
+<p>需要切换目录到项目内，然后再右键运行终端（最好开两个终端，方便调试镜像源）</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker build -t fastapi_cw_test:1.0.0 <span class="pl-c1">.</span></pre></div>
+<p>需要多试几下。</p>
+<p>如下则为镜像源连接成功</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d8ddf9c327739ed886b01dc82619862bea162953607a2dcd0a082d65e04a775e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f374c61554e744f594958783371534b2e706e67"><img src="https://camo.githubusercontent.com/d8ddf9c327739ed886b01dc82619862bea162953607a2dcd0a082d65e04a775e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f374c61554e744f594958783371534b2e706e67" alt="PixPin_2025-03-20_23-33-26" data-canonical-src="https://cdn.sa.net/2025/03/21/7LaUNtOYIXx3qSK.png" style="max-width: 100%;"></a></p>
+<p>‍</p>
+<p>开始安装相关依赖</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/da9cc4fe86fc530a3fc4259836691bc2fb4981cadf9cb4f27bea422b138ce610/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4879644143426c7053354f6b6d75562e706e67"><img src="https://camo.githubusercontent.com/da9cc4fe86fc530a3fc4259836691bc2fb4981cadf9cb4f27bea422b138ce610/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4879644143426c7053354f6b6d75562e706e67" alt="PixPin_2025-03-20_23-34-08" data-canonical-src="https://cdn.sa.net/2025/03/21/HydACBlpS5OkmuV.png" style="max-width: 100%;"></a></p>
+<h3>打包成功</h3>
+<p>晚上断电了，然后早上又改了下项目的目录名字，又重新运行了打包命令，以下是成功了。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/331b45d391de9b72adb4b5bb9c81d197a5ac91d27750b3d743f68caf57faa9de/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f384c58534541734b657656427732782e706e67"><img src="https://camo.githubusercontent.com/331b45d391de9b72adb4b5bb9c81d197a5ac91d27750b3d743f68caf57faa9de/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f384c58534541734b657656427732782e706e67" alt="PixPin_2025-03-21_07-18-03" data-canonical-src="https://cdn.sa.net/2025/03/21/8LXSEAsKevVBw2x.png" style="max-width: 100%;"></a>​</p>
+<p>现在构建好的镜像是保存在docker中的，需要将其打包成docker镜像文件并导出到Windows系统，方便上传到云服务器使用。</p>
+<p>‍</p>
+<p>‍</p>
+<h2>导出镜像到文件</h2>
+<p>如果想把镜像导出为一个文件，可以使用 docker save 命令：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">docker</span> <span class="pl-s1">save</span> <span class="pl-c1">-</span><span class="pl-s1">o</span> <span class="pl-s1">fastapi_cw_test_1</span><span class="pl-c1">.0</span><span class="pl-c1">.0</span>.<span class="pl-c1">tar</span> <span class="pl-s1">fastapi_cw_test</span>:<span class="pl-c1">1.0</span>.<span class="pl-c1">0</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/65a5a86ba012c9b597e95c7490568f3d7f11df6144fcc935e4d81575cd4ce004/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f34594a564836465843576b7a6d61692e706e67"><img src="https://camo.githubusercontent.com/65a5a86ba012c9b597e95c7490568f3d7f11df6144fcc935e4d81575cd4ce004/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f34594a564836465843576b7a6d61692e706e67" alt="PixPin_2025-03-21_07-31-52" data-canonical-src="https://cdn.sa.net/2025/03/21/4YJVH6FXCWkzmai.png" style="max-width: 100%;"></a>​</p>
+<p>该命令会把 fastapi_cw_test:1.0.0 镜像保存为 fastapi_cw_test_1.0.0.tar 文件，在当前目录找到这个文件。</p>
+<p>之后，若要在其他 Docker 环境中使用这个镜像，可使用 docker load 命令加载： <strong>（预留，本笔记使用图形化部署，没用着）</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">docker</span> <span class="pl-s1">load</span> <span class="pl-c1">-</span><span class="pl-s1">i</span> <span class="pl-s1">fastapi_cw_test_1</span><span class="pl-c1">.0</span><span class="pl-c1">.0</span>.<span class="pl-c1">tar</span></pre></div>
+<p>‍</p>
+<h2>复制镜像到Windows系统</h2>
+<p>如果镜像文件太大，复制不出来，则可能是vm tools工具的缘故，需要重新安装下vm tools工具</p>
+<h3>安装vm tools工具</h3>
+<p>参考【[<a href="https://blog.csdn.net/qq_40259641/article/details/79022844" rel="nofollow">链接</a>](<a href="https://blog.csdn.net/qq_40259641/article/details/79022844)%E3%80%91%E3%80%90%5B%5B%E9%93%BE%E6%8E%A52%5D(https://www.cnblogs.com/xilimiss510/p/16120635.html#:~:text=%E5%9C%A8Vmware%E8%BD%AF%E4%BB%B6%E4%B8%ADUbuntu%E8%BF%90%E7%94%A8%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8A%9F%E8%83%BD%E4%B8%BB%E8%A6%81%E5%81%9A%E4%B8%A4%E6%AD%A5%EF%BC%9A%20%E7%BB%99Vmware%E5%AE%89%E8%A3%85Vmware%20Tools%E3%80%82%20%E3%80%90%E5%AE%89%E8%A3%85%E5%A5%BDVmware%20Tools%E5%90%8E%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E4%B8%BB%E6%9C%BA%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%92%8C%E5%A4%8D%E5%88%B6%E3%80%81%E7%B2%98%E8%B4%B4%E6%93%8D%E4%BD%9C%E3%80%91,%E5%9C%A8%E8%99%9A%E6%8B%9F%E6%9C%BAUbutnu%20%2Fmnt%2Fhgfs%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%89%BE%E4%B8%8D%E5%88%B0%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E6%88%96%E8%80%85%E5%9C%A8Ubuntu%E7%BB%88%E7%AB%AF%E4%B8%AD%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A1%8C%20%EF%BC%9A%20vmware%20-hgfsclient%20%E6%9F%A5%E7%9C%8B%E5%BC%80%E5%90%AF%E7%9A%84%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9)%5D(https://www.cnblogs.com/xilimiss510/p/16120635.html#:~:text=%E5%9C%A8Vmware%E8%BD%AF%E4%BB%B6%E4%B8%ADUbuntu%E8%BF%90%E7%94%A8%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8A%9F%E8%83%BD%E4%B8%BB%E8%A6%81%E5%81%9A%E4%B8%A4%E6%AD%A5%EF%BC%9A%20%E7%BB%99Vmware%E5%AE%89%E8%A3%85Vmware%20Tools%E3%80%82%20%E3%80%90%E5%AE%89%E8%A3%85%E5%A5%BDVmware%20Tools%E5%90%8E%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E4%B8%BB%E6%9C%BA%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%92%8C%E5%A4%8D%E5%88%B6%E3%80%81%E7%B2%98%E8%B4%B4%E6%93%8D%E4%BD%9C%E3%80%91,%E5%9C%A8%E8%99%9A%E6%8B%9F%E6%9C%BAUbutnu%20%2Fmnt%2Fhgfs%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%89%BE%E4%B8%8D%E5%88%B0%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E6%88%96%E8%80%85%E5%9C%A8Ubuntu%E7%BB%88%E7%AB%AF%E4%B8%AD%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A1%8C%20%EF%BC%9A%20vmware%20-hgfsclient%20%E6%9F%A5%E7%9C%8B%E5%BC%80%E5%90%AF%E7%9A%84%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9)%E3%80%91" rel="nofollow">https://blog.csdn.net/qq_40259641/article/details/79022844)】【[[链接2](https://www.cnblogs.com/xilimiss510/p/16120635.html#:~:text=%E5%9C%A8Vmware%E8%BD%AF%E4%BB%B6%E4%B8%ADUbuntu%E8%BF%90%E7%94%A8%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8A%9F%E8%83%BD%E4%B8%BB%E8%A6%81%E5%81%9A%E4%B8%A4%E6%AD%A5%EF%BC%9A%20%E7%BB%99Vmware%E5%AE%89%E8%A3%85Vmware%20Tools%E3%80%82%20%E3%80%90%E5%AE%89%E8%A3%85%E5%A5%BDVmware%20Tools%E5%90%8E%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E4%B8%BB%E6%9C%BA%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%92%8C%E5%A4%8D%E5%88%B6%E3%80%81%E7%B2%98%E8%B4%B4%E6%93%8D%E4%BD%9C%E3%80%91,%E5%9C%A8%E8%99%9A%E6%8B%9F%E6%9C%BAUbutnu%20%2Fmnt%2Fhgfs%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%89%BE%E4%B8%8D%E5%88%B0%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E6%88%96%E8%80%85%E5%9C%A8Ubuntu%E7%BB%88%E7%AB%AF%E4%B8%AD%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A1%8C%20%EF%BC%9A%20vmware%20-hgfsclient%20%E6%9F%A5%E7%9C%8B%E5%BC%80%E5%90%AF%E7%9A%84%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9)](https://www.cnblogs.com/xilimiss510/p/16120635.html#:~:text=%E5%9C%A8Vmware%E8%BD%AF%E4%BB%B6%E4%B8%ADUbuntu%E8%BF%90%E7%94%A8%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8A%9F%E8%83%BD%E4%B8%BB%E8%A6%81%E5%81%9A%E4%B8%A4%E6%AD%A5%EF%BC%9A%20%E7%BB%99Vmware%E5%AE%89%E8%A3%85Vmware%20Tools%E3%80%82%20%E3%80%90%E5%AE%89%E8%A3%85%E5%A5%BDVmware%20Tools%E5%90%8E%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E4%B8%BB%E6%9C%BA%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%92%8C%E5%A4%8D%E5%88%B6%E3%80%81%E7%B2%98%E8%B4%B4%E6%93%8D%E4%BD%9C%E3%80%91,%E5%9C%A8%E8%99%9A%E6%8B%9F%E6%9C%BAUbutnu%20%2Fmnt%2Fhgfs%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%89%BE%E4%B8%8D%E5%88%B0%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9%E6%88%96%E8%80%85%E5%9C%A8Ubuntu%E7%BB%88%E7%AB%AF%E4%B8%AD%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A1%8C%20%EF%BC%9A%20vmware%20-hgfsclient%20%E6%9F%A5%E7%9C%8B%E5%BC%80%E5%90%AF%E7%9A%84%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9)】</a></p>
+<p>如果安装后还是，无法复制出来，那就只能使用网页或者配置ssh工具连接来传了。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9a94f8a13e08c314220a7ab28c04354a59f43ddfdc3ff76f8eccebb297b2d084/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f72353837334971734b53456a58487a2e706e67"><img src="https://camo.githubusercontent.com/9a94f8a13e08c314220a7ab28c04354a59f43ddfdc3ff76f8eccebb297b2d084/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f72353837334971734b53456a58487a2e706e67" alt="PixPin_2025-03-21_07-57-13" data-canonical-src="https://cdn.sa.net/2025/03/21/r5873IqsKSEjXHz.png" style="max-width: 100%;"></a>​</p>
+<p>我的情况就是无法复制，vm-tools工具也是安装失败。同时网页微信文件助手也无法使用。</p>
+<p>只能切换为ssh工具再测试了</p>
+<p>‍</p>
+<h3>安装 OpenSSH 服务</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">apt</span> <span class="pl-s1">install</span> <span class="pl-s1">ssh</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d4796896e811ee4d0ca6f5d689cccb83ec8726c6e4c844b92d65b3e2f76b94c5/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f59787243325873334f7946556e75712e706e67"><img src="https://camo.githubusercontent.com/d4796896e811ee4d0ca6f5d689cccb83ec8726c6e4c844b92d65b3e2f76b94c5/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f59787243325873334f7946556e75712e706e67" alt="PixPin_2025-03-21_08-19-26" data-canonical-src="https://cdn.sa.net/2025/03/21/YxrC2Xs3OyFUnuq.png" style="max-width: 100%;"></a></p>
+<p><strong>启用 SSH 服务以在启动时启动</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">systemctl</span> <span class="pl-s1">enable</span> <span class="pl-s1">ssh</span></pre></div>
+<p>‍</p>
+<p><strong>验证 SSH 服务状态</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">systemctl</span> <span class="pl-s1">status</span> <span class="pl-s1">ssh</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e351da897911eae1f9fbc6ea39f87b04afa2c2a2f26649d11ba7aaf91af1f830/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6248614b38506d414a37367a7339582e706e67"><img src="https://camo.githubusercontent.com/e351da897911eae1f9fbc6ea39f87b04afa2c2a2f26649d11ba7aaf91af1f830/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6248614b38506d414a37367a7339582e706e67" alt="PixPin_2025-03-21_08-20-47" data-canonical-src="https://cdn.sa.net/2025/03/21/bHaK8PmAJ76zs9X.png" style="max-width: 100%;"></a>​</p>
+<p><strong>配置防火墙</strong></p>
+<p>如果使用的是 UFW 防火墙，则必须将其配置为允许 SSH 连接。此步骤对于远程访问至关重要，尤其是在受保护的网络环境中作时。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">sudo</span> <span class="pl-s1">ufw</span> <span class="pl-s1">allow</span> <span class="pl-s1">ssh</span>
+<span class="pl-s1">sudo</span> <span class="pl-s1">ufw</span> <span class="pl-s1">enable</span></pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/72b52d866a5db34f118c716aa1255be9b04cb1191cd01164ff0a148b5c546eb3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f533448595176377a774d4b734636452e706e67"><img src="https://camo.githubusercontent.com/72b52d866a5db34f118c716aa1255be9b04cb1191cd01164ff0a148b5c546eb3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f533448595176377a774d4b734636452e706e67" alt="PixPin_2025-03-21_08-21-40" data-canonical-src="https://cdn.sa.net/2025/03/21/S4HYQv7zwMKsF6E.png" style="max-width: 100%;"></a></p>
+<p>‍</p>
+<p>这里用自己习惯的ssh工具进行即可。有个免费的叫finalshell。</p>
+<p>使用ssh工具进行连接，然后下载镜像文件（即将本地Linux系统的文件导出到Windows系统）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/58a193e445f4b9828545fb82988f69b705583afe7b4b2249922b4bc0ce1b87ea/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6862653870503658547778376e59642e706e67"><img src="https://camo.githubusercontent.com/58a193e445f4b9828545fb82988f69b705583afe7b4b2249922b4bc0ce1b87ea/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6862653870503658547778376e59642e706e67" alt="PixPin_2025-03-21_08-27-02" data-canonical-src="https://cdn.sa.net/2025/03/21/hbe8pP6XTwx7nYd.png" style="max-width: 100%;"></a>​</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ecc3ed7ab4273bc8fa03be82d37649cb4b7993e5883ed9020fb52ac4dd8a8764/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f773667654e384145395a6c4c5374792e706e67"><img src="https://camo.githubusercontent.com/ecc3ed7ab4273bc8fa03be82d37649cb4b7993e5883ed9020fb52ac4dd8a8764/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f773667654e384145395a6c4c5374792e706e67" alt="PixPin_2025-03-21_08-25-36" data-canonical-src="https://cdn.sa.net/2025/03/21/w6geN8AE9ZlLSty.png" style="max-width: 100%;"></a>​</p>
+<p>如下，说明已经将其成功导出到windows系统了。</p>
+<p>‍</p>
+<h1>上传到云服务器</h1>
+<p>可以使用ssh工具，也可以直接在服务器面板进行。</p>
+<p>这里使用ssh工具，在服务器选择一个目录，用于临时存放镜像文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/37a0aa6a3cd5b8835e242e47a6228007c2cd9600de9341b1325ee02e23e9d06e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f344e555074705a464b314a6f3845612e706e67"><img src="https://camo.githubusercontent.com/37a0aa6a3cd5b8835e242e47a6228007c2cd9600de9341b1325ee02e23e9d06e/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f344e555074705a464b314a6f3845612e706e67" alt="PixPin_2025-03-21_08-32-36" data-canonical-src="https://cdn.sa.net/2025/03/21/4NUPtpZFK1Jo8Ea.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d9fc543e2ea222e0303c1af5c2a678dc182f08f0ba03536bf949f6bb90cf74cd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f326d71366e4e66656c5052736a41562e706e67"><img src="https://camo.githubusercontent.com/d9fc543e2ea222e0303c1af5c2a678dc182f08f0ba03536bf949f6bb90cf74cd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f326d71366e4e66656c5052736a41562e706e67" alt="PixPin_2025-03-21_08-34-08" data-canonical-src="https://cdn.sa.net/2025/03/21/2mq6nNfelPRsjAV.png" style="max-width: 100%;"></a></p>
+<p>我使用的服务器面板是【[<a href="https://1panel.cn/docs/installation/online_installation/" rel="nofollow">1panel</a>](<a href="https://1panel.cn/docs/installation/online_installation/)%E3%80%91%E9%9D%A2%E6%9D%BF%E3%80%82" rel="nofollow">https://1panel.cn/docs/installation/online_installation/)】面板。</a></p>
+<p>后续的配置使用这个面板和ssh工具搭配进行。</p>
+<blockquote>
+<p>如果使用的是宝塔面板，后续步骤和本笔记会有部分不同。主要是数据库部分。</p>
+</blockquote>
+<p><strong>主要是区别是1panel基本都是基于docker容器化部署。宝塔的则主要为直接在Linux服务器环境中部署。</strong></p>
+<p>所以如果使用的是宝塔面板，那本笔记就仅做参考了。</p>
+<p>或者跳转笔记【[<a href="https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q" rel="nofollow">息流笔记</a>](<a href="https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q)%E3%80%91%E8%BF%9B%E8%A1%8C%E6%9F%A5%E7%9C%8B%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E9%83%A8%E7%BD%B2%E8%BF%87%E7%A8%8B%EF%BC%882024-1215%E5%88%9B%E5%BB%BA%EF%BC%89%E3%80%82" rel="nofollow">https://flowus.cn/ahqi/share/2a0b20c5-b9e1-4324-88f7-461e23f63f6e?code=X2MT7Q)】进行查看宝塔面板部署过程（2024-1215创建）。</a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9bfcfd422c03bdd6ffd7dbdea017ec6eb887ca0aa26832d3e7789d1c87b231ed/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6d77334f714d3663647265555078622e706e67"><img src="https://camo.githubusercontent.com/9bfcfd422c03bdd6ffd7dbdea017ec6eb887ca0aa26832d3e7789d1c87b231ed/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6d77334f714d3663647265555078622e706e67" alt="PixPin_2025-03-21_08-35-31" data-canonical-src="https://cdn.sa.net/2025/03/21/mw3OqM6cdreUPxb.png" style="max-width: 100%;"></a></p>
+<p>OK，镜像上传到云端服务器准备完成。</p>
+<p>‍</p>
+<h1>创建项目容器</h1>
+<p>导入后端项目docker镜像到容器仓库中。</p>
+<p>在1panel面板，点击左侧菜单的容器，然后选择上方的镜像-&gt;导入镜像-&gt;选择上传后的项目镜像文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a69e7c3cada3c7b1e0ab990c4ec76baa2fd9c9f56aa848263119aed93b845ddd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4d6175494a4c6f644b6a397a6377312e706e67"><img src="https://camo.githubusercontent.com/a69e7c3cada3c7b1e0ab990c4ec76baa2fd9c9f56aa848263119aed93b845ddd/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4d6175494a4c6f644b6a397a6377312e706e67" alt="PixPin_2025-03-21_18-46-35" data-canonical-src="https://cdn.sa.net/2025/03/21/MauIJLodKj9zcw1.png" style="max-width: 100%;"></a></p>
+<p>然后创建对应的项目docker容器。</p>
+<p>名字随便填，然后选择刚刚导入仓库的项目镜像</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ad02222666b16c8895139a5dde5aa78c028e9e171fb1626d4932d42ebbfa752f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f72543343494d6c795666344e4645712e706e67"><img src="https://camo.githubusercontent.com/ad02222666b16c8895139a5dde5aa78c028e9e171fb1626d4932d42ebbfa752f/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f72543343494d6c795666344e4645712e706e67" alt="PixPin_2025-03-21_19-00-16" data-canonical-src="https://cdn.sa.net/2025/03/21/rT3CIMlyVf4NFEq.png" style="max-width: 100%;"></a>​</p>
+<p>确保容器正常运行</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/59945e151b98fc81c01c01cfe1eceda433afcf501cdaad0804e8e52904a559d3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6b71476f436e494f5274576d6a41592e706e67"><img src="https://camo.githubusercontent.com/59945e151b98fc81c01c01cfe1eceda433afcf501cdaad0804e8e52904a559d3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6b71476f436e494f5274576d6a41592e706e67" alt="PixPin_2025-03-21_19-03-11" data-canonical-src="https://cdn.sa.net/2025/03/21/kqGoCnIORtWmjAY.png" style="max-width: 100%;"></a></p>
+<p>然后在系统--防火墙中，开放对应的端口。</p>
+<p>注意如果开放后依旧打不开，可能是云服务器厂商那边也需要打开下对应的端口。</p>
+<blockquote>
+<p>阿里云端口开发参考：</p>
+</blockquote>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/95b8739d83bf0d4e4296751a15603a98ce8fb4e12925224b6d4914f61cbc2e4c/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f516d445a74426e484e567a704c62392e706e67"><img src="https://camo.githubusercontent.com/95b8739d83bf0d4e4296751a15603a98ce8fb4e12925224b6d4914f61cbc2e4c/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f516d445a74426e484e567a704c62392e706e67" alt="image" data-canonical-src="https://cdn.sa.net/2025/03/21/QmDZtBnHNVzpLb9.png" style="max-width: 100%;"></a>​</p>
+<p>其他厂商的也类似，基本都在安全组里设置。</p>
+<p>‍</p>
+<p>打开fastapi自带的接口文档（云服务器公网地址）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/78577498b84a2034954d6095c701c7d13d41c1bca6a74e740ebc35cc26f21d5a/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f754e743648445246784d646245326e2e706e67"><img src="https://camo.githubusercontent.com/78577498b84a2034954d6095c701c7d13d41c1bca6a74e740ebc35cc26f21d5a/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f754e743648445246784d646245326e2e706e67" alt="PixPin_2025-03-21_19-02-05" data-canonical-src="https://cdn.sa.net/2025/03/21/uNt6HDRFxMdbE2n.png" style="max-width: 100%;"></a></p>
+<p>OK，能打开就说明容器运行成功。</p>
+<p><strong>至此，后端python项目docker容器化部署完成。</strong></p>
+<p>后续的则是数据库连接配置的内容。</p>
+<p>‍</p>
+<p>‍</p>
+<h1>接入数据库</h1>
+<h2>导出本地数据库文件</h2>
+<p>使用可以导出数据库的软件工具，进行数据库文件的导出。</p>
+<p>这里使用的是navicat for mysql软件进行，也可以使用自己习惯的软件。</p>
+<p>进入软件，选择对应的数据库，然后导出（转储SQL文件）</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f8e19415566239af5d9b9c6a686f2720335ecdfeba7636f0f6e6682ca6f40652/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7075724c32386f57375852737a31642e706e67"><img src="https://camo.githubusercontent.com/f8e19415566239af5d9b9c6a686f2720335ecdfeba7636f0f6e6682ca6f40652/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7075724c32386f57375852737a31642e706e67" alt="PixPin_2025-03-21_08-39-35" data-canonical-src="https://cdn.sa.net/2025/03/21/purL28oW7XRsz1d.png" style="max-width: 100%;"></a>​</p>
+<p>找一个目录放着，方便等会上传到服务器。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bb3554348c06bda947d0062d288ac3a921257ce48b9d39a259f027b8d533a3a1/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f36415474723266494f4a336d6a356e2e706e67"><img src="https://camo.githubusercontent.com/bb3554348c06bda947d0062d288ac3a921257ce48b9d39a259f027b8d533a3a1/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f36415474723266494f4a336d6a356e2e706e67" alt="PixPin_2025-03-21_08-40-10" data-canonical-src="https://cdn.sa.net/2025/03/21/6ATtr2fIOJ3mj5n.png" style="max-width: 100%;"></a>​</p>
+<p>如下即为导出成功。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5a48d4a41d94010f6dfca7a03ef2a7e9aaf473307e50db5763be222be107b0af/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4d45466878326a705441387377436e2e706e67"><img src="https://camo.githubusercontent.com/5a48d4a41d94010f6dfca7a03ef2a7e9aaf473307e50db5763be222be107b0af/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4d45466878326a705441387377436e2e706e67" alt="PixPin_2025-03-21_08-39-13" data-canonical-src="https://cdn.sa.net/2025/03/21/MEFhx2jpTA8swCn.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<h2>安装mysql服务</h2>
+<p>这里是已经创建过数据库容器了，没有的在应用商店中搜索，按页面提示安装就行。</p>
+<blockquote>
+<p><strong>在1panel面板中，mysql数据库也是使用容器部署的，所以直接在应用商店中安装即可。</strong></p>
+</blockquote>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/577f38056aea58f3679183f54a165f1c3ad86e9d03ded4cb240ddaf5d5c7c0c7/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f754e38733368476d6f516c704936542e706e67"><img src="https://camo.githubusercontent.com/577f38056aea58f3679183f54a165f1c3ad86e9d03ded4cb240ddaf5d5c7c0c7/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f754e38733368476d6f516c704936542e706e67" alt="PixPin_2025-03-21_19-07-29" data-canonical-src="https://cdn.sa.net/2025/03/21/uN8s3hGmoQlpI6T.png" style="max-width: 100%;"></a></p>
+<p>创建一个专用用户来作为数据库连接配置使用。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1e4b1bf7e1daab13c775c0e168faa66b73946da8898c0c8956c8cbafcd0c7f89/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6a57533876597066417850324c724a2e706e67"><img src="https://camo.githubusercontent.com/1e4b1bf7e1daab13c775c0e168faa66b73946da8898c0c8956c8cbafcd0c7f89/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f6a57533876597066417850324c724a2e706e67" alt="PixPin_2025-03-21_08-44-08" data-canonical-src="https://cdn.sa.net/2025/03/21/jWS8vYpfAxP2LrJ.png" style="max-width: 100%;"></a>​</p>
+<p>‍</p>
+<h2>导入到云端数据库</h2>
+<p>然后将数据库文件导入到对应的数据库中。</p>
+<p>正常情况在这里导入即可，如果不成功则切换其他软件来远程连接导入。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b4e6b74e88b2703545c5e989febab83f5c5a3e9db41a081f9ccbdab4157ebb41/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4a7538684c434b6d48657a6b796c6a2e706e67"><img src="https://camo.githubusercontent.com/b4e6b74e88b2703545c5e989febab83f5c5a3e9db41a081f9ccbdab4157ebb41/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f4a7538684c434b6d48657a6b796c6a2e706e67" alt="PixPin_2025-03-21_18-22-21" data-canonical-src="https://cdn.sa.net/2025/03/21/Ju8hLCKmHezkylj.png" style="max-width: 100%;"></a></p>
+<p>‍</p>
+<h1>配置数据库连接</h1>
+<h2>修改后端数据库连接配置代码</h2>
+<p><strong>1panel采用容器化部署，所以直接来容器这里查看数据库的内网地址。</strong></p>
+<p>查看mysql的内网地址：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/478c739bee0d2768e4820159721231d393c5faaa0f68fa07c9602d0a8c238486/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f397477724f41527a4c4937737535342e706e67"><img src="https://camo.githubusercontent.com/478c739bee0d2768e4820159721231d393c5faaa0f68fa07c9602d0a8c238486/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f397477724f41527a4c4937737535342e706e67" alt="PixPin_2025-03-21_18-42-33" data-canonical-src="https://cdn.sa.net/2025/03/21/9twrOARzLI7su54.png" style="max-width: 100%;"></a>​</p>
+<p>手动进入后端项目的容器内部目录</p>
+<p>（没找到快捷入口，只能手动找了）</p>
+<p>位置一般在</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c1">/</span><span class="pl-s1">var</span><span class="pl-c1">/</span><span class="pl-s1">lib</span><span class="pl-c1">/</span><span class="pl-s1">docker</span><span class="pl-c1">/</span><span class="pl-s1">overlay2</span><span class="pl-c1">/</span><span class="pl-c1">*</span><span class="pl-c1">*</span><span class="pl-c1">*</span><span class="pl-s1">一堆字母数字</span><span class="pl-c1">**</span><span class="pl-c1">*</span><span class="pl-s1">用时间排序来找目录</span><span class="pl-c1">/</span><span class="pl-s1">merged</span><span class="pl-c1">/</span><span class="pl-s1">app</span><span class="pl-c1">/</span><span class="pl-s1">项目内部目录</span></pre></div>
+<p>然后我这里找的是数据库连接配置文件。在下图位置，请根据自己的项目目录来找并进行配置。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e85a2cbb5ab762108c381e31baa74a79fcb37a20a569ee3c306603fcfa4d98a4/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7a386b717045565250596a494b694d2e706e67"><img src="https://camo.githubusercontent.com/e85a2cbb5ab762108c381e31baa74a79fcb37a20a569ee3c306603fcfa4d98a4/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f7a386b717045565250596a494b694d2e706e67" alt="PixPin_2025-03-21_19-18-52" data-canonical-src="https://cdn.sa.net/2025/03/21/z8kqpEVRPYjIKiM.png" style="max-width: 100%;"></a></p>
+<p>修改为云端数据库的连接信息，地址为mysql的内网地址。</p>
+<blockquote>
+<p><strong>然后保存，再重启后端容器，重启后端容器，重启后端容器！</strong></p>
+</blockquote>
+<p>‍</p>
+<p>‍</p>
+<p>然后接口文档测试，能否获取到数据。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/7d7cf8c93e1b7fb78e2bbe1f9ed437025710260962d97afa4f59fec3976cb5b3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f71344448615572316e4d35514f77632e706e67"><img src="https://camo.githubusercontent.com/7d7cf8c93e1b7fb78e2bbe1f9ed437025710260962d97afa4f59fec3976cb5b3/68747470733a2f2f63646e2e73612e6e65742f323032352f30332f32312f71344448615572316e4d35514f77632e706e67" alt="PixPin_2025-03-21_19-26-22" data-canonical-src="https://cdn.sa.net/2025/03/21/q4DHaUr1nM5QOwc.png" style="max-width: 100%;"></a>​</p>
+<p>这里可以获取到数据，说明数据库连接也配置成功了。</p>
+<p>至此，后端项目docker化部署和接入数据库配置完成。</p>
+<p>本笔记结束。</p>
+<h1>结束</h1>
+<p>‍</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://ahqiy001.github.io">纸小念github博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("01/14/2025"!=""){
+    var startSite=new Date("01/14/2025");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","ahqiy001/ahqiy001.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
